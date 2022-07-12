@@ -27,7 +27,7 @@ module.exports = {
             const { status } = req.query;
 
             await Transaction.findByIdAndUpdate({ _id: id }, { status });
-            req.flash('alertMessage', 'Berhasil ubah status');
+            req.flash('alertMessage', 'Berhasil mengubah status transaksi');
             req.flash('alertStatus', 'success');
         } catch (error) {
             req.flash('alertMessage', `${error.message}`);
