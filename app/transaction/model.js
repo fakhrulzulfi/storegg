@@ -55,11 +55,11 @@ const transactionSchema = mongoose.Schema({
         minLength: [3, 'Panjang nama akun harus 3 - 225 karakter'],
         maxLength: [225, 'Panjang nama akun harus 3 - 225 karakter']
     },
-    banks: {
+    value: {
         type: Number,
         default: 0
     },
-    value: {
+    tax: {
         type: Number,
         default: 0
     },
