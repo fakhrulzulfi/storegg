@@ -1,5 +1,6 @@
 const Player = require('./model');
 const Voucher = require('../voucher/model');
+const Category = require('../category/model');
 
 module.exports = {
     landingPage: async(req, res) => {
@@ -41,5 +42,19 @@ module.exports = {
                 message: 'Terjadi kesalahan pada server'
             });
         }
-    }
+    },
+    category: async (req, res) => {
+        try {
+            const category =  await Category.find();
+            
+            return res.status(200).json({
+                data: category
+            });
+        } catch (error) {
+            console.log(`[!] ${error.message}`);
+            return res.status(500).json({
+                message: 'Terjadi kesalahan pada server'
+            });
+        }
+    },
 }
