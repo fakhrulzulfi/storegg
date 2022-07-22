@@ -132,4 +132,71 @@ module.exports = {
             });
         }
     },
+    history: async (req, res) => {
+        try {
+            const { status = '' } = req.query;
+            let criteria = {};
+            
+            if( status.length > 0 ) {
+                criteria = {
+                    ...criteria,
+                    status: { $regex: `${status}`, $options: '1' }
+                };
+            }
+
+            if( req.player._id ) {
+                criteria = {
+                    ...criteria,
+                    player: req.player._id
+                };
+            }
+
+            const history = await Transaction.find(criteria);
+
+            const total = await Transaction.aggregate([
+                {$match: criteria},
+                {
+                    $group: {
+                        _id: null,
+                        value: { $sum: "$value" }
+                    }
+                }
+            ]);
+
+            return res.status(200).json({
+                data: history,
+                total: total[0]?.value || '0',
+                _links: {
+                    successTransaction: 'api/v1/players/history?status=success',
+                    failedTransaction: 'api/v1/players/history?status=failed',
+                    pendingTransaction: 'api/v1/players/history?status=pending',
+                }
+            });
+
+        } catch (error) {
+            console.log(`[!] ${error.message}`);
+            return res.status(500).json({
+                message: 'Terjadi kesalahan pada server'
+            });
+        }
+    },
+    historyDetail: async (req, res) => {
+        try {
+            const { id: transactionID } = req.params;
+
+            const history = await Transaction.findOne({ _id: transactionID });
+
+            if( !history ) return res.status(404).json({ message: 'History tidak ditemukan' });
+
+            return res.status(200).json({
+                data: history
+            });
+            
+        } catch (error) {
+            console.log(`[!] ${error.message}`);
+            return res.status(500).json({
+                message: 'Terjadi kesalahan pada server'
+            });
+        }
+    },
 }
