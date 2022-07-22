@@ -6,6 +6,7 @@ const {
     checkout,
     history,
     historyDetail,
+    dashboard,
 } = require('./controller');
 
 // middleware
@@ -17,5 +18,6 @@ router.get('/category', category);
 router.post('/checkout', isLogin, checkout);
 router.get('/history', isLogin, history);
 router.get('/history/:id/detail', isLogin, historyDetail);
+router.get('/dashboard', isLogin, dashboard);
 
 module.exports = router;
